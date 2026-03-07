@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ vm.title }}</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        color: #1f2937;
+        background-color: #f9fafb;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+      }
+      header {
+        border-bottom: 2px solid #3b82f6;
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      h1 {
+        margin: 0 0 0.5rem 0;
+        color: #1e3a8a;
+        font-size: 1.75rem;
+      }
+      .company-info {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        color: #6b7280;
+        font-size: 0.9rem;
+      }
+      .company-info span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      .label {
+        font-weight: 600;
+        color: #374151;
+      }
+      section {
+        margin-bottom: 1.5rem;
+      }
+      h2 {
+        font-size: 1.125rem;
+        color: #1e40af;
+        margin: 0 0 0.75rem 0;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+      }
+      .summary-text {
+        background-color: #f3f4f6;
+        padding: 1rem;
+        border-radius: 6px;
+        border-left: 4px solid #3b82f6;
+      }
+      ul {
+        margin: 0;
+        padding-left: 1.5rem;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+      .key-points li::marker {
+        color: #10b981;
+      }
+      .risks li::marker {
+        color: #ef4444;
+      }
+      .recommendation {
+        background-color: #ecfdf5;
+        border: 1px solid #10b981;
+        border-radius: 6px;
+        padding: 1rem;
+      }
+      .recommendation h2 {
+        color: #059669;
+        border-bottom-color: #a7f3d0;
+      }
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+      .metric-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+      }
+      .metric-name {
+        font-size: 0.8rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .metric-value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+      }
+      footer {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+        font-size: 0.8rem;
+        color: #9ca3af;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>{{ vm.company_name }} ({{ vm.ticker }})</h1>
+        <div class="company-info">
+          {% if vm.sector %}
+          <span><span class="label">Sector:</span> {{ vm.sector }}</span>
+          {% endif %}
+          {% if vm.analyst_name %}
+          <span><span class="label">Analyst:</span> {{ vm.analyst_name }}</span>
+          {% endif %}
+        </div>
+      </header>
+
+      <main>
+        <section>
+          <h2>Executive Summary</h2>
+          <div class="summary-text">
+            {{ vm.summary }}
+          </div>
+        </section>
+
+        <section class="key-points">
+          <h2>Key Points</h2>
+          <ul>
+            {% for point in vm.key_points %}
+            <li>{{ point }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <section class="risks">
+          <h2>Risks</h2>
+          <ul>
+            {% for risk in vm.risks %}
+            <li>{{ risk }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <section class="recommendation">
+          <h2>Recommendation</h2>
+          <p>{{ vm.recommendation }}</p>
+        </section>
+
+        {% if vm.metrics %}
+        <section>
+          <h2>Key Metrics</h2>
+          <div class="metrics-grid">
+            {% for name, value in vm.metrics %}
+            <div class="metric-card">
+              <div class="metric-name">{{ name }}</div>
+              <div class="metric-value">{{ value }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+      </main>
+
+      <footer>
+        Investment Briefing Report - Generated at: {{ vm.generated_at }}
+      </footer>
+    </div>
+  </body>
+</html>
