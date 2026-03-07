@@ -195,4 +195,34 @@ describe('CandidatesService', () => {
       });
     });
   });
+
+  describe('listSummaries', () => {
+    it('returns summaries for candidate ordered by createdAt DESC', async () => {
+      candidateRepository.findOne.mockResolvedValue({
+        id: 'candidate-1',
+        workspaceId: 'workspace-1',
+      });
+      summaryRepository.find.mockResolvedValue([
+        { id: 'summary-2', candidateId: 'candidate-1', status: 'completed', createdAt: new Date('2024-01-02') },
+        { id: 'summary-1', candidateId: 'candidate-1', status: 'completed', createdAt: new Date('2024-01-01') },
+      ]);
+
+      const result = await service.listSummaries(mockUser, 'candidate-1');
+
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('summary-2');
+      expect(summaryRepository.find).toHaveBeenCalledWith({
+        where: { candidateId: 'candidate-1', workspaceId: 'workspace-1' },
+        order: { createdAt: 'DESC' },
+      });
+    });
+
+    it('throws NotFoundException when candidate not in workspace', async () => {
+      candidateRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.listSummaries(mockUser, 'candidate-other'),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
 });
